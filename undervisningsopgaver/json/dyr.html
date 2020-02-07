@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <section class="liste"> </section>
+    <template>
+        <article class="dyr">
+            <h3></h3>
+            <img src="" alt="">
+            <p class="type"></p>
+            <p class="levested"></p>
+        </article>
+
+    </template>
+
+</body>
+
+<script>
+    //    let dyr ={"dyr":"gris","type":"pattedyr","levested":"svinefarme"}
+
+
+    document.addEventListener("DOMContentLoaded", hentData);
+
+    let dyr = []
+
+    //start
+
+
+    //Hentdata
+
+    async function hentData() {
+        const response = await fetch("01_dyr.json");
+        console.log(response);
+        dyr = await response.json();
+        console.log(dyr);
+        visDyr();
+    }
+    //vis dyr
+
+    console.log(dyr);
+
+
+    function visDyr() {
+
+        const container = document.querySelector(".liste");
+        const dyrTemplate = document.querySelector("template");
+        dyr.forEach(art => {
+            let klon = dyrTemplate.cloneNode(true).content;
+            klon.querySelector("h3").textContent = art.Race;
+            klon.querySelector(".type").textContent = art.Type;
+            klon.querySelector(".levested").textContent = art.Levested;
+            klon.querySelector("img").src = art.Foto;
+            container.appendChild(klon);
+
+        })
+    }
+</script></html>
