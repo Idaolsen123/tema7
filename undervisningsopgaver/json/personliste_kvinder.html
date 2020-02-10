@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<style>
+    article {
+        border: 1px solid black;
+    }
+
+    img {
+        width: 100%;
+    }
+
+    .liste {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        max-width: 1000px;
+        margin: 0 auto;
+        grid-gap: 10px;
+    }
+
+</style>
+
+
+<body>
+
+    <section class="liste"> </section>
+    <template>
+        <article class="persondata">
+            <h2></h2>
+            <img src="" alt="">
+            <p class="navn"></p>
+            <p class="efternavn"></p>
+            <p class="alder">Alder:</p>
+            <p class="sex">Køn:</p>
+            <p class="religion">Religion:</p>
+            <p class="hobby">Hobby:</p>
+            <p class="kaeledyr">Kæledyr:</p>
+            <p class="job">Job:</p>
+            <p class="by">By:</p>
+            <p class="rpc">RPC:</p>
+
+        </article>
+
+    </template>
+</body>
+
+<script>
+    //    let dyr ={"dyr":"gris","type":"pattedyr","levested":"svinefarme"}
+
+
+    const endpoint = "http://spreadsheets.google.com/feeds/list/1XWWbfWszD7f4jHqp51V_oT3pkHuR-ceEUw4YtrvK7F0/od6/public/values?alt=json";
+    let personer = [];
+    let filter = "k";
+    //start
+    hentData();
+
+    //Hentdata
+
+    async function hentData() {
+        const response = await fetch(endpoint);
+        console.log(response);
+        personer = await response.json();
+        console.log(personer);
+        visPersoner();
+    }
+    //vis dyr
+
+    //    console.log(personer);
+
+
+    function visPersoner() {
+
+        const container = document.querySelector(".liste");
+        const personTemplate = document.querySelector("template");
+
+        personer.feed.entry.forEach((person) => {
+            console.log(person);
+            if (person.gsx$sex.$t == filter) {
+                let klon = personTemplate.cloneNode(true).content;
+                klon.querySelector("h2").textContent = person.gsx$navn.$t + `${" "}` + person.gsx$efternavn.$t;
+                klon.querySelector("img").src = person.gsx$billede.$t;
+                klon.querySelector(".sex").textContent = person.gsx$sex.$t;
+                klon.querySelector(".alder").textContent = person.gsx$alder.$t;
+                klon.querySelector(".religion").textContent = person.gsx$religion.$t;
+                klon.querySelector(".hobby").textContent = person.gsx$hobby.$t;
+                klon.querySelector(".kaeledyr").textContent = person.gsx$kaeledyr.$t;
+                klon.querySelector(".job").textContent = person.gsx$job.$t;
+                klon.querySelector(".by").textContent = person.gsx$by.$t;
+                klon.querySelector(".rpc").textContent = person.gsx$rpc.$t;
+                container.appendChild(klon);
+            }
+        })
+
+    }
+
+
+    //        dyr.forEach(art => {
+    //            let klon = dyrTemplate.cloneNode(true).content;
+    //            klon.querySelector("h3").textContent = art.Race;
+    //            klon.querySelector(".type").textContent = art.Type;
+    //            klon.querySelector(".levested").textContent = art.Levested;
+    //            klon.querySelector("img").src = art.Foto;
+    //            container.appendChild(klon);
+    //
+    //    })
+    //    }
+
+</script>
+
+</html>
