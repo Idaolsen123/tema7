@@ -23,10 +23,23 @@
         grid-gap: 10px;
     }
 
+    h1,
+    nav {
+        display: flex;
+        justify-content: center;
+        padding: 2rem 2rem 2rem 1rem;
+    }
 </style>
 
 
 <body>
+    <h1>Alle</h1>
+    <nav>
+        <button class="filter valgt" data-køn="alle">Alle</button>
+        <button class="filter" data-køn="m">Mænd</button>
+        <button class="filter" data-køn="k">Kvinder</button>
+        <button class="filter" data-køn="andet">Andet</button>
+    </nav>
 
     <section class="liste"> </section>
     <template>
@@ -55,7 +68,7 @@
 
     const endpoint = "http://spreadsheets.google.com/feeds/list/1XWWbfWszD7f4jHqp51V_oT3pkHuR-ceEUw4YtrvK7F0/od6/public/values?alt=json";
     let personer = [];
-    let filter = "k";
+    let filter = "alle";
     //start
     hentData();
 
@@ -78,9 +91,10 @@
         const container = document.querySelector(".liste");
         const personTemplate = document.querySelector("template");
 
+        container.innerHTML = "";
         personer.feed.entry.forEach((person) => {
             console.log(person);
-            if (person.gsx$sex.$t == filter) {
+            if (filter == "alle" || filter == person.gsx$sex.$t) {
                 let klon = personTemplate.cloneNode(true).content;
                 klon.querySelector("h2").textContent = person.gsx$navn.$t + `${" "}` + person.gsx$efternavn.$t;
                 klon.querySelector("img").src = person.gsx$billede.$t;
@@ -96,6 +110,20 @@
             }
         })
 
+        addEventlistenersToButton();
+    }
+
+    function addEventlistenersToButton() {
+        document.querySelectorAll(".filter").forEach(elm => {
+            elm.addEventListener("click", filtrering);
+        })
+    }
+
+    function filtrering() {
+        console.log("FILTER");
+        filter = this.dataset.køn;
+        document.querySelector("h1").textContent = this.textContent;
+        visPersoner();
     }
 
 
@@ -109,7 +137,4 @@
     //
     //    })
     //    }
-
-</script>
-
-</html>
+</script></html>
